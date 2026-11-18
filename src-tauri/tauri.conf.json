@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Shadowsh",
+  "version": "0.1.0",
+  "identifier": "com.oyayasu.shadowsh",
+  "build": {
+    "frontendDist": "../web"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "Shadowsh",
+        "width": 1300,
+        "height": 840,
+        "minWidth": 930,
+        "minHeight": 620,
+        "backgroundColor": "#fbfaff"
+      }
+    ],
+    "security": { "csp": null }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "shortDescription": "Offline pronunciation practice for English",
+    "icon": ["icons/icon.ico"],
+    "windows": {
+      "nsis": { "displayLanguageSelector": false }
+    }
+  }
+}
