@@ -255,7 +255,12 @@ fn install_engine_impl(app: tauri::AppHandle) -> Result<Status, String> {
     emit(&app, "engine", "verify", "Checking the SHA-256 archive fingerprint", None);
     let mut hasher = Sha256::new();
     let mut file = fs::File::open(&archive_path).map_err(|e| e.to_string())?;
-    std::io::copy(&mut file, &mut hasher).map_err(|e| e.to_string())?;
+    let mut hash_buffer = [0u8; 64 * 1024];
+    loop {
+        let bytes_read = file.read(&mut hash_buffer).map_err(|e| e.to_string())?;
+        if bytes_read == 0 { break; }
+        hasher.update(&hash_buffer[..bytes_read]);
+    }
     let actual = hex::encode(hasher.finalize());
     if actual != expected {
         let _ = fs::remove_file(&archive_path);
@@ -358,7 +363,7 @@ fn run_model_operation(app: tauri::AppHandle, model: String, remove: bool) -> Re
         .spawn()
         .map_err(|e| format!("Could not start the native engine: {e}"))?;
     let stderr = child.stderr.take().ok_or("No diagnostics from voice engine")?;
-    let percentage = Regex::new(r"(?<!\d)\d{1,3}%").unwrap_or_else(|_| Regex::new(r"\d{1,3}%").unwrap());
+    let percentage = Regex::new(r"\b\d{1,3}%").expect("valid progress regex");
     let mut last_lines = Vec::new();
     for line in BufReader::new(stderr).lines() {
         let line = line.map_err(|e| e.to_string())?;
