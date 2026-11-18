@@ -30,3 +30,9 @@ This application source is MIT licensed. It does not redistribute Qwen weights, 
 ## Status
 
 First implementation / Windows MVP; it has **not yet been validated on a Windows GPU or against every Tauri/WebView2 configuration**. See the README implementation notes and CI build before treating the app as production-ready.
+
+## Download the Windows installer
+
+Open [Actions → Windows desktop](https://github.com/oyayasu/Shadowsh/actions/workflows/windows.yml), open a **successful** run, and download the **Shadowsh-Windows-Installer** artifact. Extract the ZIP and launch the NSIS `.exe` on Windows. In the app's **Models & voices** page: install the engine, install the US/UK IPA dictionaries, and download Qwen3-TTS 0.6B (recommended). Internet is only needed for those downloads; no system Python is required.
+
+**Hardware note:** The native Windows speech.cpp build uses Vulkan. Make sure the graphics driver supplies `vulkan-1.dll`; AMD Radeon cards generally provide it via the current GPU driver. UK IPA comparison is not equivalent to a guaranteed British voice. Neural pronunciation scoring is not included in this version.

@@ -311,7 +311,9 @@ async function playReference() {
     state.playing=!playback.paused; updatePlaybackButton(); return;
   }
   try {
+    const requestedKey = audioKey();
     const {key,url} = await getAudioUrl();
+    if (key !== requestedKey || key !== audioKey()) return; // User switched lines during synthesis.
     stopAudio(); playingKey=key;
     playback.src=url; playback.playbackRate=state.speed; playback.preservesPitch=true;
     await playback.play(); state.playing=true; updatePlaybackButton();
